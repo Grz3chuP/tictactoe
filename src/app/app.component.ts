@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import {checkUserIsLogin} from "../firebase";
 
 @Component({
   selector: 'app-root',
@@ -7,4 +8,10 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'tictactoe';
+
+  constructor() {
+    checkUserIsLogin()
+  }
+
+
 }

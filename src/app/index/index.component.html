@@ -1,0 +1,16 @@
+<p>index works!</p>
+<div class="container">
+  <div class="topMenuWrapper d-flex gap-2">
+  <a *ngIf="!userIsLogged()" routerLink="/index/login" class="btn btn-primary" >login</a>
+  <a *ngIf="userIsLogged()" (click)="logOut()" class="btn btn-primary" >logout</a>
+  <div class="menuWrapper" *ngIf="userIsLogged()">
+    <a routerLink="/index/waitingRoom" class="btn btn-primary" routerLinkActive="activeLink">Waiting Room</a>
+  </div>
+  </div>
+
+
+
+
+  <router-outlet></router-outlet>
+</div>
+{{userIsLogged()}}

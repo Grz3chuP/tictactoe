@@ -1,0 +1,18 @@
+<div *ngIf="!userIsLogged()" class="main border rounded p-2">
+  <form (ngSubmit)="loginUser($event)">
+  <label class="form-label" for="email">Email</label><br>
+  <input class="form-control" type="email" id="email" name="email" placeholder="Your email.."><br>
+  <label class="form-label" for="password">Password</label><br>
+  <input class="form-control" type="password" id="password" name="password" placeholder="Your password.."><br><br>
+  <input class="btn-primary btn w-100" type="submit" value="Submit">
+  </form>
+  <div class="text-center">
+
+    <div (click)="signInWithGoogle()">sign with google</div>
+</div>
+
+</div>
+<div class=" p-2">
+  witaj
+</div>
+
