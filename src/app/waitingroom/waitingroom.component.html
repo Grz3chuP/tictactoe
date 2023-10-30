@@ -1,1 +1,23 @@
-<p>waitingroom works!</p>
+
+<div class="waitingRoomWrapper ">
+  <p>Take your seat</p>
+  <button (click)="writeTableData(['waiting for player','waiting for player'],[false,false])">kick</button>
+  <div class="waitingRoom d-flex gap-2">
+    <div class="waitingRoomSeat p-2 border rounded flex-grow-1">
+      <div class="waitingRoomSeatInner d-flex flex-column justify-content-center align-items-center">
+        <p class="waitingRoomSeatNumber">1</p>
+        <p class="waitingRoomSeatName">{{userName1()}}</p>
+        <button class="btn btn-primary" (click)="seatDown()">Seat</button>
+      </div>
+    </div>
+    <div class="waitingRoomSeat p-2 border rounded flex-grow-1">
+      <div class="waitingRoomSeatInner d-flex flex-column justify-content-center align-items-center">
+        <p class="waitingRoomSeatNumber">2</p>
+        <p class="waitingRoomSeatName">{{userName2()}}</p>
+        <button class="btn btn-primary" (click)="seatDown2()">Seat</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+

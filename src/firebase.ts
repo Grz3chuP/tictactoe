@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getDatabase, ref, set, onValue, get } from "firebase/database";
+import { getDatabase, ref, set, onValue, get, remove } from "firebase/database";
 import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { getStorage, ref as refStorage, uploadBytes } from "firebase/storage";
 import {signal} from "@angular/core";
@@ -24,21 +24,38 @@ const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
 export let userIsLogged = signal(false);
-export function writeUserData( name: any, email: any) {
-  set(ref(db, 'users'), {
-    username: name,
+export let userUid = signal('');
+export let userCredentials = signal('');
+export function writeUserData( uid: any, email: any, path: any) {
+  set(ref(db, path), {
+    userUid: uid,
     email: email,
 
   });
 }
+export function writeTableData( player: any, seat: any) {
+  set(ref(db, 'table'), {
+    player: player,
+    seat: seat
 
+  });
+}
+
+export function removeTableData(path: any) {
+  remove(ref(db, path));
+}
 export async function signInWithGoogle() {
   const auth = getAuth();
   const provider = new GoogleAuthProvider();
   const credential = await signInWithPopup(auth, provider).then((result) => {
     userIsLogged.set(true);
     const user = result.user;
-
+    if (typeof user.email === "string") {
+      userCredentials.set(user.email);
+    }
+    writeUserData(user.uid, user.email, 'users');
+    userUid.set(user.uid);
+    console.log(userCredentials());
   });
 
 
@@ -55,11 +72,30 @@ export const checkUserIsLogin = async () => {
     if (user) {
       console.log('zalogowany' + user.email);
       userIsLogged.set(true);
-
+      writeUserData(user.uid, user.email, 'logedUsers/' + user.uid);
+      if (typeof user.email === "string") {
+        userCredentials.set(user.email);
+      }
     } else {
       console.log('niezalogowany');
       userIsLogged.set(false);
+      removeTableData('logedUsers/' + userUid());
+
     }
   });
 }
+export let userName1 = signal('Waiting for player');
+export let userName2 = signal('Waiting for player');
+export let user1isTaken = signal(false);
+export let user2isTaken = signal(false);
 
+onValue(ref(db, 'table'), (snapshot) => {
+  const data = snapshot.val();
+  if (data) {
+    userName1.set(data.player[0]);
+    userName2.set(data.player[1]);
+    user1isTaken.set(data.seat[0]);
+    user2isTaken.set(data.seat[1]);
+
+  }
+});
