@@ -2,7 +2,7 @@
 <div class="mainGameWrapper">
 <div *ngFor="let grid of board()"
      class="grid"
-      [ngClass]="grid.value === 1 ? 'gridX': grid.value === 2 ? 'gridY': '' "
+      [ngClass]="grid.value === 1 ? 'gridX': grid.value === 2 ? 'gridY': grid.value === 0 ? 'gridEmpty': ''"
      (click)="changeValue(grid)"
 >{{grid.id}}</div>
 </div>

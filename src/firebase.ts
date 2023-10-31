@@ -99,6 +99,8 @@ export let user1isTaken = signal(false);
 export let user2isTaken = signal(false);
 export const gameIsReady = signal(true);
 
+export const whoseTurn = signal(false);
+
 onValue(ref(db, 'table'), (snapshot) => {
   const data = snapshot.val();
   if (data) {
