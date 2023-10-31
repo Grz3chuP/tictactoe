@@ -4,6 +4,7 @@ import { getDatabase, ref, set, onValue, get, remove } from "firebase/database";
 import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { getStorage, ref as refStorage, uploadBytes } from "firebase/storage";
 import {signal} from "@angular/core";
+import {board} from "./controler";
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -41,6 +42,14 @@ export function writeTableData( player: any, seat: any) {
   });
 }
 
+export function writeGameData( board: any) {
+  board.forEach((item: any, index: any) => {
+  set(ref(db, 'game/' + index), {
+    id: item.id,
+    value: item.value,
+  });
+  });
+}
 export function removeTableData(path: any) {
   remove(ref(db, path));
 }
@@ -88,6 +97,7 @@ export let userName1 = signal('Waiting for player');
 export let userName2 = signal('Waiting for player');
 export let user1isTaken = signal(false);
 export let user2isTaken = signal(false);
+export const gameIsReady = signal(true);
 
 onValue(ref(db, 'table'), (snapshot) => {
   const data = snapshot.val();
@@ -97,5 +107,12 @@ onValue(ref(db, 'table'), (snapshot) => {
     user1isTaken.set(data.seat[0]);
     user2isTaken.set(data.seat[1]);
 
+  }
+});
+onValue(ref(db, 'game'), (snapshot) => {
+  const data = snapshot.val();
+  if (data) {
+    console.log(data);
+    board.set(data);
   }
 });

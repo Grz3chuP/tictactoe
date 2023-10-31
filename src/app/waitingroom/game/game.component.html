@@ -1,0 +1,8 @@
+<p>game works!</p>
+<div class="mainGameWrapper">
+<div *ngFor="let grid of board()"
+     class="grid"
+      [ngClass]="grid.value === 1 ? 'gridX': grid.value === 2 ? 'gridY': '' "
+     (click)="changeValue(grid)"
+>{{grid.id}}</div>
+</div>

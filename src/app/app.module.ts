@@ -7,13 +7,15 @@ import { LoginComponent } from './login/login.component';
 import { IndexComponent } from './index/index.component';
 import {FormsModule} from "@angular/forms";
 import { WaitingroomComponent } from './waitingroom/waitingroom.component';
+import { GameComponent } from './waitingroom/game/game.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
     IndexComponent,
-    WaitingroomComponent
+    WaitingroomComponent,
+    GameComponent
   ],
   imports: [
     BrowserModule,

@@ -1,5 +1,6 @@
 import {Component} from '@angular/core';
 import {
+  gameIsReady,
   user1isTaken,
   user2isTaken,
   userCredentials,
@@ -66,4 +67,5 @@ export class WaitingroomComponent {
   protected readonly userName1 = userName1;
   protected readonly userName2 = userName2;
   protected readonly writeTableData = writeTableData;
+  protected readonly gameIsReady = gameIsReady;
 }
