@@ -37,7 +37,8 @@ export function writeUserData( uid: any, email: any, path: any) {
 export function writeTableData( player: any, seat: any) {
   set(ref(db, 'table'), {
     player: player,
-    seat: seat
+    seat: seat,
+
 
   });
 }
@@ -49,6 +50,12 @@ export function writeGameData( board: any) {
     value: item.value,
   });
   });
+}
+export function writeGameTurnData( player: any, gameIsReady: any) {
+  set(ref(db, 'turn'), {
+      whoseTurn: player,
+      gameIsReady: gameIsReady,
+   });
 }
 export function removeTableData(path: any) {
   remove(ref(db, path));
@@ -71,6 +78,21 @@ export async function signInWithGoogle() {
   console.log(credential);
 }
 
+export async function signInWithEmailAndPassword1(email: any, password: any) {
+  const auth = getAuth();
+  const credential = await signInWithEmailAndPassword(auth, email, password);
+  const user = credential.user;
+  if (user) {
+    userIsLogged.set(true);
+    if (typeof user.email === "string") {
+      userCredentials.set(user.email);
+    }
+    writeUserData(user.uid, user.email, 'users');
+    userUid.set(user.uid);
+    console.log(userCredentials());
+  }
+  console.log(credential);
+}
 export async function logOut() {
   const auth = getAuth();
   await signOut(auth);
@@ -97,9 +119,9 @@ export let userName1 = signal('Waiting for player');
 export let userName2 = signal('Waiting for player');
 export let user1isTaken = signal(false);
 export let user2isTaken = signal(false);
-export const gameIsReady = signal(true);
+export const gameIsReady = signal(false);
 
-export const whoseTurn = signal(false);
+export const whoseTurn = signal(userName1());
 
 onValue(ref(db, 'table'), (snapshot) => {
   const data = snapshot.val();
@@ -116,5 +138,14 @@ onValue(ref(db, 'game'), (snapshot) => {
   if (data) {
     console.log(data);
     board.set(data);
+
+  }
+});
+onValue(ref(db, 'turn'), (snapshot) => {
+  const data = snapshot.val();
+  if (data) {
+    console.log(data);
+    whoseTurn.set(data.whoseTurn);
+    gameIsReady.set(data.gameIsReady);
   }
 });

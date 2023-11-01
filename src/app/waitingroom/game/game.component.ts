@@ -2,7 +2,15 @@ import { Component } from '@angular/core';
 import {GamecontrolService} from "../../services/gamecontrol.service";
 import {board} from "../../../controler";
 import {Boardtemplate} from "../../../models/boardtemplate";
-import {whoseTurn, writeGameData} from "../../../firebase";
+import {
+  gameIsReady,
+  userCredentials,
+  userName1,
+  userName2,
+  whoseTurn,
+  writeGameData,
+  writeGameTurnData
+} from "../../../firebase";
 
 @Component({
   selector: 'app-game',
@@ -12,32 +20,53 @@ import {whoseTurn, writeGameData} from "../../../firebase";
 export class GameComponent {
 
 
-  constructor(public gamecontrolService: GamecontrolService) {
+  constructor(private gamecontrolService: GamecontrolService) {
   }
 
   protected readonly board = board;
 
   changeValue(grid: Boardtemplate) {
-    if (!whoseTurn()) {
+    if (whoseTurn() === userCredentials()) {
       if (grid.value != 0) {
         return;
       }
-      board.mutate(value => (value[grid.id].value = 1))
-      writeGameData(board());
-      whoseTurn.set(true);
+
+      if (whoseTurn() === userName1()) {
+        whoseTurn.set(userName2());
+        writeGameTurnData(userName2(), gameIsReady());
+        board.mutate(value => (value[grid.id].value = 1))
+        writeGameData(board());
+      } else {
+        whoseTurn.set(userName1());
+        writeGameTurnData(userName1(), gameIsReady());
+        board.mutate(value => (value[grid.id].value = 2))
+        writeGameData(board());
+      }
+
       this.winnerCheck(1)
+      this.winnerCheck(2)
 
     }
     else {
-      if (grid.value != 0) {
-        return;
+      if (whoseTurn() === userCredentials()) {
+        if (grid.value != 0) {
+          return;
+        }
+
+        if (whoseTurn() === userName1()) {
+        whoseTurn.set(userName2());
+        writeGameTurnData(userName2(), gameIsReady());
+          board.mutate(value => (value[grid.id].value = 2))
+          writeGameData(board());
+        } else {
+        whoseTurn.set(userName1());
+        writeGameTurnData(userName1(), gameIsReady());
+          board.mutate(value => (value[grid.id].value = 2))
+          writeGameData(board());
+        }
+        this.winnerCheck(2)
+
       }
-      board.mutate(value => (value[grid.id].value = 2))
-      writeGameData(board());
-
-      whoseTurn.set(false);
-      this.winnerCheck(2)
-
     }
 
   }
@@ -71,10 +100,12 @@ export class GameComponent {
      }
       else if (board().every(value => value.value !== 0)) {
         alert('Draw');
+        board.set(this.gamecontrolService.boardCreator);
+        writeGameData(board());
       }
 
   }
 
 
-
+  protected readonly whoseTurn = whoseTurn;
 }

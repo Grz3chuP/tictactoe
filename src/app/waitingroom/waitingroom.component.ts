@@ -6,9 +6,10 @@ import {
   userCredentials,
   userIsLogged,
   userName1,
-  userName2,
+  userName2, whoseTurn, writeGameTurnData,
   writeTableData
 } from "../../firebase";
+import {GamecontrolService} from "../services/gamecontrol.service";
 
 @Component({
   selector: 'app-waitingroom',
@@ -22,9 +23,11 @@ export class WaitingroomComponent {
   // user1isTaken = false;
   // user2isTaken = false;
 
-  constructor() {
+  constructor(){
 
   }
+
+
 
   seatDown() {
     if (userIsLogged()) {
@@ -68,4 +71,13 @@ export class WaitingroomComponent {
   protected readonly userName2 = userName2;
   protected readonly writeTableData = writeTableData;
   protected readonly gameIsReady = gameIsReady;
+
+  startGame() {
+    if (user1isTaken() && user2isTaken()) {
+      gameIsReady.set(true);
+      whoseTurn.set(userName1());
+      writeGameTurnData(whoseTurn() , gameIsReady());
+    }
+
+  }
 }
