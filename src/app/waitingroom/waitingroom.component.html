@@ -21,6 +21,9 @@
   </div>
 </div>
 <button (click)="startGame()">Start Game</button>
+{{gameIsReady()}}
+{{user1isTaken()}}
+{{user2isTaken()}}
 <div class="boardWrapper d-flex justify-content-center " *ngIf="gameIsReady()">
  <app-game ></app-game>
 </div>

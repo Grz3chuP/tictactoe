@@ -73,11 +73,16 @@ export class WaitingroomComponent {
   protected readonly gameIsReady = gameIsReady;
 
   startGame() {
+
     if (user1isTaken() && user2isTaken()) {
       gameIsReady.set(true);
       whoseTurn.set(userName1());
-      writeGameTurnData(whoseTurn() , gameIsReady());
+      writeGameTurnData(whoseTurn(), gameIsReady());
+
     }
 
   }
+
+  protected readonly user1isTaken = user1isTaken;
+  protected readonly user2isTaken = user2isTaken;
 }

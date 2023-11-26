@@ -133,14 +133,7 @@ onValue(ref(db, 'table'), (snapshot) => {
 
   }
 });
-onValue(ref(db, 'game'), (snapshot) => {
-  const data = snapshot.val();
-  if (data) {
-    console.log(data);
-    board.set(data);
-
-  }
-});
+1
 onValue(ref(db, 'turn'), (snapshot) => {
   const data = snapshot.val();
   if (data) {
